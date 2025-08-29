@@ -4,3 +4,7 @@ audio/*
 video/*
 
 # Allow you to add exceptions (like !images/hero.jpg later)
+# Allow media files to be tracked by Git LFS
+!images/**
+!audio/**
+!video/**
