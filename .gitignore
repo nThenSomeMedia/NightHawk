@@ -1,0 +1,6 @@
+# Ignore media folders by default
+images/*
+audio/*
+video/*
+
+# Allow you to add exceptions (like !images/hero.jpg later)
