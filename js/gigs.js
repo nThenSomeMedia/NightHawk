@@ -6,7 +6,8 @@ const venues = {
 		address: "11 Bear Paws Way",
 		city: "Loleta",
 		phone: "(707) 733-9646",
-		tel: "707-733-9646"
+		tel: "707-733-9646",
+		defaultTime: null
 	},
 	blueLake: {
 		title: "Blue Lake Casino",
@@ -14,7 +15,9 @@ const venues = {
 		address: "777 Casino Way",
 		city: "Blue Lake",
 		phone: "(877) 252-2946",
-		tel: "877-252-2946"
+		tel: "877-252-2946",
+		// Confirmed by Brigette on October 9, 2026.
+		defaultTime: "8:00PM to Midnight"
 	},
 	elks: {
 		title: "Elks Lodge",
@@ -22,7 +25,8 @@ const venues = {
 		address: "445 Herrick Ave",
 		city: "Eureka",
 		phone: "(707) 442-6652",
-		tel: "707-442-6652"
+		tel: "707-442-6652",
+		defaultTime: null
 	},
 	heights: {
 		title: "The Heights Casino",
@@ -30,7 +34,9 @@ const venues = {
 		address: "27 Scenic Dr",
 		city: "Trinidad, CA 95570",
 		phone: "(707) 677-3611",
-		tel: "707-677-3611"
+		tel: "707-677-3611",
+		// Confirmed for December 31, 2026; treat as the current default pending future confirmation.
+		defaultTime: "8:00PM to Midnight"
 	}
 };
 
@@ -48,31 +54,16 @@ const gigs = [
 	{
 		date: "2026-10-10",
 		venue: "blueLake",
-		time: "9:00PM to 1:00AM",
-		cover: "No cover"
-	},
-	{
-		date: "2026-11-14",
-		venue: "bearRiver",
-		time: "9:00PM to 1:00AM",
 		cover: "No cover"
 	},
 	{
 		date: "2026-12-05",
 		venue: "blueLake",
-		time: "9:00PM to 1:00AM",
 		cover: "No cover"
-	},
-	{
-		date: "2026-12-19",
-		venue: "elks",
-		time: "7:30PM to 10:00PM",
-		cover: 'Contact Brigette, if you would like to go.<br> $5.00-cover<br><a href="#contact">Contact</a>'
 	},
 	{
 		date: "2026-12-31",
 		venue: "heights",
-		time: "8:00PM to Midnight",
 		cover: "New Year's Eve Red Carpet Celebration"
 	}
 ];
@@ -89,11 +80,16 @@ const formatDate = dateString => {
 	};
 };
 
-gigs.sort((a, b) => new Date(a.date) - new Date(b.date));
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+
+const upcomingGigs = gigs
+	.filter(gig => new Date(`${gig.date}T00:00:00`) >= today)
+	.sort((a, b) => a.date.localeCompare(b.date));
 
 let currentYear = "";
 
-gigs.forEach(gig => {
+upcomingGigs.forEach(gig => {
 	const venue = venues[gig.venue];
 	const date = formatDate(gig.date);
 
@@ -121,7 +117,7 @@ gigs.forEach(gig => {
 				</div>
 				<div class="event-timing">
 					<img src="images/time.png" alt="" aria-hidden="true" />
-					${gig.time}
+					${gig.time || venue.defaultTime || "Time to be announced"}
 				</div>
 				<div class="event-timing">
 					${gig.cover}
